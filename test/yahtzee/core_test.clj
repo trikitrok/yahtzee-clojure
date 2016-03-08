@@ -10,7 +10,7 @@
                           5 1 3 2 3
                           6 2 4]))
 
-(def stubbed-dice-to-rerun-responses
+(def stubbed-dice-to-rerun-inputs
   (atom ["D1 D2 D4"
          "D2 D4"
          "D2 D5"
@@ -27,7 +27,7 @@
   (make-stub-producing-list stubbed-rands))
 
 (def stubbed-ask-dice-to-rerun
-  (make-stub-producing-list stubbed-dice-to-rerun-responses))
+  (make-stub-producing-list stubbed-dice-to-rerun-inputs))
 
 (facts
   "about Yahtzee kata"
