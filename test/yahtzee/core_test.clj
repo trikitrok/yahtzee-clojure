@@ -8,15 +8,16 @@
 (def stubbed-dice-to-rerun-responses
   (atom ["D1 D2 D4"]))
 
-(defn stubbed-roll []
-  (let [r (first @stubbed-rands)]
-    (swap! stubbed-rands rest)
-    r))
+(defn make-stub-producing-list [atom-stub]
+  #(let [next-val (first @atom-stub)]
+    (swap! atom-stub rest)
+    next-val))
 
-(defn stubbed-ask-dice-to-rerun []
-  (let [r (first @stubbed-dice-to-rerun-responses)]
-    (swap! stubbed-dice-to-rerun-responses rest)
-    r))
+(def stubbed-roll
+  (make-stub-producing-list stubbed-rands))
+
+(def stubbed-ask-dice-to-rerun
+  (make-stub-producing-list stubbed-dice-to-rerun-responses))
 
 (facts
   "about Yahtzee"
