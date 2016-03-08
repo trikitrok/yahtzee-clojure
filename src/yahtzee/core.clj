@@ -5,16 +5,20 @@
 (defn roll-dices [roll]
   (repeatedly 5 roll))
 
+(defn dices-output-str [roll-dices]
+  (str
+    "Dice: "
+    (clojure.string/join
+      " "
+      (map #(str "D" %2 ":" %1)
+           (roll-dices)
+           dice-nums))))
+
 (defn category-output-strs [roll-dices]
   (clojure.string/join
     "\n"
     ["Category: Ones"
-     (str "Dice: "
-          (clojure.string/join
-            " "
-            (map #(str "D" %2 ":" %1)
-                 (roll-dices)
-                 dice-nums)))
+     (dices-output-str roll-dices)
      "[1] Dice to re-run:"]))
 
 (defn yahtzee [roll-dices]
