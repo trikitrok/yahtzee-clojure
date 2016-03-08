@@ -100,3 +100,7 @@
 
 (defn make-yahtzee [roll ask-dice-to-rerun]
   (partial yahtzee (partial roll-dice roll) ask-dice-to-rerun))
+
+(defn -main [& args]
+  (let [yahtzee (make-yahtzee #(inc (rand-int 6)) read-line)]
+    (yahtzee)))
