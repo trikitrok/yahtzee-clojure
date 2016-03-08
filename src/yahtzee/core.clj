@@ -1,15 +1,13 @@
 (ns yahtzee.core)
 
-(def dice [:d1 :d2 :d3 :d4 :d5])
+(def dice ["D1" "D2" "D3" "D4" "D5"])
 
 (def titles-by-category
-  {:ones "Category: Ones"})
+  {:ones "Category: Ones"
+   :twos "Category: Twos"})
 
 (def rolled-dice
-  (atom {:d1 nil :d2 nil :d3 nil :d4 nil :d5 nil}))
-
-(def description-by-dice
-  {:d1 "D1", :d2 "D2", :d3 "D3", :d4 "D4", :d5 "D5"})
+  (atom {"D1" nil "D2" nil "D3" nil "D4" nil "D5" nil}))
 
 (defn roll-dice [roll dice]
   (swap! rolled-dice
@@ -21,21 +19,26 @@
     "Dice: "
     (clojure.string/join
       " "
-      (map #(str (description-by-dice %) ":" (rolled-dice %)) dice))))
+      (map #(str % ":" (rolled-dice %)) dice))))
 
 (defn dice-to-rerun [roll-num]
   (str "[" roll-num "] Dice to re-run:"))
 
-(defn produce-category-output [category roll-num]
+(defn produce-roll-output [roll-num]
   (clojure.string/join
     "\n"
-    [(titles-by-category category)
-     (dice-output-str @rolled-dice)
+    [(dice-output-str @rolled-dice)
      (dice-to-rerun roll-num)]))
 
-(defn yahtzee [roll-dice]
-  (roll-dice dice)
-  (println (produce-category-output :ones 1)))
+(defn extract-dice [input-str]
+  (clojure.string/split input-str #" "))
 
-(defn make-yahtzee [roll]
-  (partial yahtzee (partial roll-dice roll)))
+(defn yahtzee [roll-dice ask-dice-to-rerun]
+  (println (titles-by-category :ones))
+  (roll-dice dice)
+  (println (produce-roll-output 1))
+  (roll-dice (extract-dice (ask-dice-to-rerun)))
+  (println (produce-roll-output 2)))
+
+(defn make-yahtzee [roll ask-dice-to-rerun]
+  (partial yahtzee (partial roll-dice roll) ask-dice-to-rerun))
