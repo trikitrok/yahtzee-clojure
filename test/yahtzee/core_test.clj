@@ -4,14 +4,14 @@
 
 (def stubbed-rands (atom [2 4 1 6 1]))
 
-(defn stub-rand [_ _]
+(defn stubbed-roll []
   (let [r (first @stubbed-rands)]
     (swap! stubbed-rands rest)
     r))
 
 (facts
   "about Yahtzee"
-  (let [yahtzee (make-yahtzee stub-rand)]
+  (let [yahtzee (make-yahtzee stubbed-roll)]
     (fact
       "it outputs to the console"
       (let [cout (with-out-str (yahtzee))]

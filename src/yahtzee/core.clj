@@ -1,13 +1,13 @@
 (ns yahtzee.core)
 
-(defn yahtzee [rand-int]
+(defn yahtzee [roll]
   (println "Category: Ones")
   (println
     (str "Dice: "
          (clojure.string/join
            " "
-           (map #(str "D" % ":" (rand-int 0 6))
+           (map #(str "D" % ":" (roll))
                 (range 1 6))))))
 
-(defn make-yahtzee [rand-int]
-  #(yahtzee rand-int))
+(defn make-yahtzee [roll]
+  #(yahtzee roll))
