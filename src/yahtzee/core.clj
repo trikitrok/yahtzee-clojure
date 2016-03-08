@@ -2,27 +2,32 @@
 
 (def dice-nums (range 1 6))
 
-(defn roll-dices [roll]
+(def titles-by-category
+  {:ones "Category: Ones"})
+
+(defn roll-dice [roll]
   (repeatedly 5 roll))
 
-(defn dices-output-str [roll-dices]
+(defn dice-output-str [roll-dice]
   (str
     "Dice: "
     (clojure.string/join
       " "
       (map #(str "D" %2 ":" %1)
-           (roll-dices)
+           (roll-dice)
            dice-nums))))
 
-(defn category-output-strs [roll-dices]
-  (clojure.string/join
-    "\n"
-    ["Category: Ones"
-     (dices-output-str roll-dices)
-     "[1] Dice to re-run:"]))
+(defn dice-to-rerun [roll-num]
+  (str "[" roll-num "] Dice to re-run:"))
+
+(defn category-output-strs [category roll-num roll-dice]
+  (clojure.string/join "\n"
+    [(titles-by-category category)
+     (dice-output-str roll-dice)
+     (dice-to-rerun roll-num)]))
 
 (defn yahtzee [roll-dices]
-  (println (category-output-strs roll-dices)))
+  (println (category-output-strs :ones 1 roll-dices)))
 
 (defn make-yahtzee [roll]
-  (partial yahtzee #(roll-dices roll)))
+  (partial yahtzee #(roll-dice roll)))
