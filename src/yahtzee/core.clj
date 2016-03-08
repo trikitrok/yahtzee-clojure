@@ -14,21 +14,15 @@
          merge
          (into {} (for [d dice] [d (roll)]))))
 
-(defn dice-output-str [rolled-dice]
+(defn produce-dice-output []
   (str
     "Dice: "
     (clojure.string/join
       " "
-      (map #(str % ":" (rolled-dice %)) dice))))
+      (map #(str % ":" (@rolled-dice %)) dice))))
 
 (defn dice-to-rerun [roll-num]
   (str "[" roll-num "] Dice to re-run:"))
-
-(defn produce-roll-output [roll-num]
-  (clojure.string/join
-    "\n"
-    [(dice-output-str @rolled-dice)
-     (dice-to-rerun roll-num)]))
 
 (defn extract-dice [input-str]
   (clojure.string/split input-str #" "))
@@ -36,9 +30,13 @@
 (defn yahtzee [roll-dice ask-dice-to-rerun]
   (println (titles-by-category :ones))
   (roll-dice dice)
-  (println (produce-roll-output 1))
+  (println (produce-dice-output))
+  (println (dice-to-rerun 1))
   (roll-dice (extract-dice (ask-dice-to-rerun)))
-  (println (produce-roll-output 2)))
+  (println (produce-dice-output))
+  (println (dice-to-rerun 2))
+  (roll-dice (extract-dice (ask-dice-to-rerun)))
+  (println (produce-dice-output)))
 
 (defn make-yahtzee [roll ask-dice-to-rerun]
   (partial yahtzee (partial roll-dice roll) ask-dice-to-rerun))
