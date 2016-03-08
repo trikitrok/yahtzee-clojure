@@ -27,6 +27,13 @@
 (defn extract-dice [input-str]
   (clojure.string/split input-str #" "))
 
+(defn score []
+  (count
+    (second
+           (first
+             (filter #(= 1 (first %))
+                     (group-by #(val %) @rolled-dice))))))
+
 (defn yahtzee [roll-dice ask-dice-to-rerun]
   (println (titles-by-category :ones))
   (roll-dice dice)
@@ -36,7 +43,8 @@
   (println (produce-dice-output))
   (println (dice-to-rerun 2))
   (roll-dice (extract-dice (ask-dice-to-rerun)))
-  (println (produce-dice-output)))
+  (println (produce-dice-output))
+  (println (str "Category Ones score: " (score))))
 
 (defn make-yahtzee [roll ask-dice-to-rerun]
   (partial yahtzee (partial roll-dice roll) ask-dice-to-rerun))
