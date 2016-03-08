@@ -93,9 +93,10 @@
   (println (produce-final-score-output categories scores-by-category)))
 
 (defn yahtzee [roll-dice ask-dice-to-rerun]
-  (doseq [category [:ones :twos :threes]]
+  (let [categories [:ones :twos :threes]]
+    (doseq [category categories]
     (play-category roll-dice ask-dice-to-rerun category))
-  (print-scores-summary [:ones :twos :threes] @scores-by-category))
+  (print-scores-summary categories @scores-by-category)))
 
 (defn make-yahtzee [roll ask-dice-to-rerun]
   (partial yahtzee (partial roll-dice roll) ask-dice-to-rerun))
