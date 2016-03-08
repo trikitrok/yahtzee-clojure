@@ -27,11 +27,12 @@
   (clojure.string/split input-str #" "))
 
 (defn score []
-  (count
-    (second
-           (first
-             (filter #(= 1 (first %))
-                     (group-by #(val %) @rolled-dice))))))
+  (->> @rolled-dice
+       (group-by #(val %))
+       (filter #(= 1 (first %)))
+       (first)
+       (second)
+       (count)))
 
 (defn produce-category-title [category]
   (str "Category: " (titles-by-category category)))
