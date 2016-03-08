@@ -41,15 +41,18 @@
   (str "Category " (titles-by-category category)
        " score: " (score rolled-dice 1)))
 
-(defn yahtzee [roll-dice ask-dice-to-rerun]
-  (println (produce-category-title :ones))
+(defn play-category [roll-dice ask-dice-to-rerun category]
+  (println (produce-category-title category))
   (roll-dice dice)
   (println (produce-dice-output @rolled-dice))
   (doseq [num-reruns [1 2]]
-      (println (dice-to-rerun num-reruns))
-      (roll-dice (extract-dice (ask-dice-to-rerun)))
-      (println (produce-dice-output @rolled-dice)))
-  (println (produce-category-score-output :ones @rolled-dice)))
+    (println (dice-to-rerun num-reruns))
+    (roll-dice (extract-dice (ask-dice-to-rerun)))
+    (println (produce-dice-output @rolled-dice)))
+  (println (produce-category-score-output category @rolled-dice)))
+
+(defn yahtzee [roll-dice ask-dice-to-rerun]
+  (play-category roll-dice ask-dice-to-rerun :ones))
 
 (defn make-yahtzee [roll ask-dice-to-rerun]
   (partial yahtzee (partial roll-dice roll) ask-dice-to-rerun))
