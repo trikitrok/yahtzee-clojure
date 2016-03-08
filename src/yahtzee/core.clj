@@ -4,7 +4,8 @@
 
 (def titles-by-category
   {:ones "Ones"
-   :twos "Twos"})
+   :twos "Twos"
+   :threes "Threes"})
 
 (def rolled-dice
   (atom {"D1" nil "D2" nil "D3" nil "D4" nil "D5" nil}))
@@ -43,7 +44,8 @@
 
 (def score-fn-by-category
   {:ones (partial score 1)
-   :twos (partial score 2)})
+   :twos (partial score 2)
+   :threes (partial score 3)})
 
 (defn produce-category-score-output [category rolled-dice]
   (str "Category " (titles-by-category category)
@@ -67,7 +69,8 @@
 
 (defn yahtzee [roll-dice ask-dice-to-rerun]
   (play-category roll-dice ask-dice-to-rerun :ones)
-  (play-category roll-dice ask-dice-to-rerun :twos))
+  (play-category roll-dice ask-dice-to-rerun :twos)
+  (play-category roll-dice ask-dice-to-rerun :threes))
 
 (defn make-yahtzee [roll ask-dice-to-rerun]
   (partial yahtzee (partial roll-dice roll) ask-dice-to-rerun))
