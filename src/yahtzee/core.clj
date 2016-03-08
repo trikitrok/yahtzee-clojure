@@ -26,8 +26,8 @@
 (defn extract-dice [input-str]
   (clojure.string/split input-str #" "))
 
-(defn score []
-  (->> @rolled-dice
+(defn score [rolled-dice]
+  (->> rolled-dice
        (group-by #(val %))
        (filter #(= 1 (first %)))
        (first)
@@ -38,7 +38,7 @@
   (str "Category: " (titles-by-category category)))
 
 (defn produce-category-score-output [category]
-  (str "Category " (titles-by-category category) " score: " (score)))
+  (str "Category " (titles-by-category category) " score: " (score @rolled-dice)))
 
 (defn yahtzee [roll-dice ask-dice-to-rerun]
   (println (produce-category-title :ones))
