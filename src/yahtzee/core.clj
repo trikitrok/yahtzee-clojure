@@ -3,8 +3,7 @@
 (def dice ["D1" "D2" "D3" "D4" "D5"])
 
 (def titles-by-category
-  {:ones "Category: Ones"
-   :twos "Category: Twos"})
+  {:ones "Ones"})
 
 (def rolled-dice
   (atom {"D1" nil "D2" nil "D3" nil "D4" nil "D5" nil}))
@@ -34,8 +33,14 @@
              (filter #(= 1 (first %))
                      (group-by #(val %) @rolled-dice))))))
 
+(defn produce-category-title [category]
+  (str "Category: " (titles-by-category category)))
+
+(defn produce-category-score-output [category]
+  (str "Category " (titles-by-category category) " score: " (score)))
+
 (defn yahtzee [roll-dice ask-dice-to-rerun]
-  (println (titles-by-category :ones))
+  (println (produce-category-title :ones))
   (roll-dice dice)
   (println (produce-dice-output))
   (println (dice-to-rerun 1))
@@ -44,7 +49,7 @@
   (println (dice-to-rerun 2))
   (roll-dice (extract-dice (ask-dice-to-rerun)))
   (println (produce-dice-output))
-  (println (str "Category Ones score: " (score))))
+  (println (produce-category-score-output :ones)))
 
 (defn make-yahtzee [roll ask-dice-to-rerun]
   (partial yahtzee (partial roll-dice roll) ask-dice-to-rerun))
