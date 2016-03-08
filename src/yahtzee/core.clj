@@ -45,12 +45,10 @@
   (println (produce-category-title :ones))
   (roll-dice dice)
   (println (produce-dice-output @rolled-dice))
-  (println (dice-to-rerun 1))
-  (roll-dice (extract-dice (ask-dice-to-rerun)))
-  (println (produce-dice-output @rolled-dice))
-  (println (dice-to-rerun 2))
-  (roll-dice (extract-dice (ask-dice-to-rerun)))
-  (println (produce-dice-output @rolled-dice))
+  (doseq [num-reruns [1 2]]
+      (println (dice-to-rerun num-reruns))
+      (roll-dice (extract-dice (ask-dice-to-rerun)))
+      (println (produce-dice-output @rolled-dice)))
   (println (produce-category-score-output :ones @rolled-dice)))
 
 (defn make-yahtzee [roll ask-dice-to-rerun]
