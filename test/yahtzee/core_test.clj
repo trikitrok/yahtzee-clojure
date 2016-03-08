@@ -56,4 +56,9 @@
                           "Dice: D1:5 D2:1 D3:3 D4:2 D5:3"
                           "[2] Dice to re-run:"
                           "Dice: D1:6 D2:2 D3:3 D4:4 D5:3"
-                          "Category Threes score: 2"]))))
+                          "Category Threes score: 2"
+                          "Yahtzee score"
+                          "Ones: 4"
+                          "Twos: 3"
+                          "Threes: 2"
+                          "Final score: 9"]))))
