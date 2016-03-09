@@ -72,12 +72,15 @@
 (defn notify-dice-output [rolled-dice dice]
   (println (produce-dice-output rolled-dice dice)))
 
+(defn ask-which-dice-to-rerun [num-reruns]
+  (println (dice-to-rerun num-reruns)))
+
 (defn play-category [roll-dice ask-dice-to-rerun category]
   (notify-category category)
   (initial-roll-dice roll-dice)
   (notify-dice-output @rolled-dice dice)
   (doseq [num-reruns [1 2]]
-    (println (dice-to-rerun num-reruns))
+    (ask-which-dice-to-rerun num-reruns)
     (roll-dice (extract-dice (ask-dice-to-rerun)))
     (notify-dice-output @rolled-dice dice))
   (store-score category (score-category category @rolled-dice))
