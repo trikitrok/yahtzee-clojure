@@ -12,9 +12,6 @@
       " "
       (map #(str % ":" (rolled-dice %)) dice))))
 
-(defn- dice-to-rerun [roll-num]
-  (str "[" roll-num "] Dice to re-run:"))
-
 (defn- produce-category-title [category]
   (str "Category: " (titles-by-category category)))
 
@@ -44,7 +41,7 @@
   (println (produce-dice-output rolled-dice dice)))
 
 (defn ask-which-dice-to-rerun [num-reruns]
-  (println (dice-to-rerun num-reruns)))
+  (println (str "[" num-reruns "] Dice to re-run:")))
 
 (defn notify-category-score [scores-by-category category]
   (println (produce-category-score-output category (scores-by-category category))))
