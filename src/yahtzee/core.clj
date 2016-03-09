@@ -62,10 +62,13 @@
   (store-score category (score-category category @rolled-dice))
   (notifications/notify-category-score @scores-by-category category))
 
+(defn play-categories [roll-dice read-dice-to-rerun-input categories]
+  (doseq [category categories]
+    (play-category roll-dice read-dice-to-rerun-input category)))
+
 (defn yahtzee [roll-dice read-dice-to-rerun-input]
   (let [categories [:ones :twos :threes]]
-    (doseq [category categories]
-      (play-category roll-dice read-dice-to-rerun-input category))
+    (play-categories roll-dice read-dice-to-rerun-input categories)
     (notifications/notify-scores-summary categories @scores-by-category)))
 
 (defn make-yahtzee [roll read-dice-to-rerun-input]
