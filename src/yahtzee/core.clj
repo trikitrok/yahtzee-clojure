@@ -66,8 +66,11 @@
 (defn store-score [category score]
   (swap! scores-by-category assoc category score))
 
+(defn notify-category [category]
+  (println (produce-category-title category)))
+
 (defn play-category [roll-dice ask-dice-to-rerun category]
-  (println (produce-category-title category))
+  (notify-category category)
   (initial-roll-dice roll-dice)
   (println (produce-dice-output @rolled-dice dice))
   (doseq [num-reruns [1 2]]
