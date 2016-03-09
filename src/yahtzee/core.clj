@@ -69,14 +69,17 @@
 (defn notify-category [category]
   (println (produce-category-title category)))
 
+(defn notify-dice-output [rolled-dice dice]
+  (println (produce-dice-output rolled-dice dice)))
+
 (defn play-category [roll-dice ask-dice-to-rerun category]
   (notify-category category)
   (initial-roll-dice roll-dice)
-  (println (produce-dice-output @rolled-dice dice))
+  (notify-dice-output @rolled-dice dice)
   (doseq [num-reruns [1 2]]
     (println (dice-to-rerun num-reruns))
     (roll-dice (extract-dice (ask-dice-to-rerun)))
-    (println (produce-dice-output @rolled-dice dice)))
+    (notify-dice-output @rolled-dice dice))
   (store-score category (score-category category @rolled-dice))
   (println (produce-category-score-output category (@scores-by-category category))))
 
