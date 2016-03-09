@@ -98,7 +98,7 @@
 (defn produce-final-score-output [categories scores-by-category]
   (str "Final score: " (final-categories-score categories scores-by-category)))
 
-(defn print-scores-summary [categories scores-by-category]
+(defn notify-scores-summary [categories scores-by-category]
   (println "Yahtzee score")
   (doseq [category categories]
     (println (produce-short-category-score category scores-by-category)))
@@ -108,7 +108,7 @@
   (let [categories [:ones :twos :threes]]
     (doseq [category categories]
     (play-category roll-dice read-dice-to-rerun-input category))
-  (print-scores-summary categories @scores-by-category)))
+    (notify-scores-summary categories @scores-by-category)))
 
 (defn make-yahtzee [roll read-dice-to-rerun-input]
   (partial yahtzee (partial roll-dice roll) read-dice-to-rerun-input))
