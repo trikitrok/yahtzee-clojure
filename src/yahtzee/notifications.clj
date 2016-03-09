@@ -23,7 +23,7 @@
 (defn notify-category [notify-fn category]
   (notify-fn (str "Category: " (titles-by-category category))))
 
-(defn notify-dice-output [notify-fn rolled-dice dice]
+(defn notify-dice [notify-fn rolled-dice dice]
   (notify-fn (str "Dice: " (clojure.string/join
                        " "
                        (map #(str % ":" (rolled-dice %)) dice)))))
