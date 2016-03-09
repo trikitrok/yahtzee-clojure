@@ -45,26 +45,26 @@
 (defn store-score [category score]
   (swap! scores-by-category assoc category score))
 
-(defn play-category [roll-dice read-dice-to-rerun-input category]
-  (notifications/notify-category category)
+(defn play-category [notify-fn roll-dice read-dice-to-rerun-input category]
+  (notifications/notify-category notify-fn category)
   (initial-roll-dice roll-dice)
-  (notifications/notify-dice-output @rolled-dice dice)
+  (notifications/notify-dice-output notify-fn @rolled-dice dice)
   (doseq [num-reruns [1 2]]
-    (notifications/ask-which-dice-to-rerun num-reruns)
+    (notifications/ask-which-dice-to-rerun notify-fn num-reruns)
     (roll-dice (extract-dice (read-dice-to-rerun-input)))
-    (notifications/notify-dice-output @rolled-dice dice))
+    (notifications/notify-dice-output notify-fn @rolled-dice dice))
   (store-score category (score-category category @rolled-dice))
-  (notifications/notify-category-score @scores-by-category category))
+  (notifications/notify-category-score notify-fn @scores-by-category category))
 
-(defn yahtzee [roll-dice read-dice-to-rerun-input]
+(defn yahtzee [roll-dice read-dice-to-rerun-input notify-fn]
   (let [categories [:ones :twos :threes]]
     (doseq [category categories]
-    (play-category roll-dice read-dice-to-rerun-input category))
-    (notifications/notify-scores-summary categories @scores-by-category)))
+      (play-category notify-fn roll-dice read-dice-to-rerun-input category))
+    (notifications/notify-scores-summary notify-fn categories @scores-by-category)))
 
-(defn make-yahtzee [roll read-dice-to-rerun-input]
-  (partial yahtzee (partial roll-dice roll) read-dice-to-rerun-input))
+(defn make-yahtzee [roll read-dice-to-rerun-input notify-fn]
+  (partial yahtzee (partial roll-dice roll) read-dice-to-rerun-input notify-fn))
 
 (defn -main [& args]
-  (let [yahtzee (make-yahtzee #(inc (rand-int 6)) read-line)]
+  (let [yahtzee (make-yahtzee #(inc (rand-int 6)) read-line println)]
     (yahtzee)))
