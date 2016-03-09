@@ -5,10 +5,6 @@
    :twos "Twos"
    :threes "Threes"})
 
-(defn- produce-category-score-output [category score]
-  (str "Category " (titles-by-category category)
-       " score: " score))
-
 (defn- produce-short-category-score [category scores-by-category]
   (str (titles-by-category category) ": " (scores-by-category category)))
 
@@ -36,4 +32,5 @@
   (println (str "[" num-reruns "] Dice to re-run:")))
 
 (defn notify-category-score [scores-by-category category]
-  (println (produce-category-score-output category (scores-by-category category))))
+  (println (str "Category " (titles-by-category category)
+                " score: " (scores-by-category category))))
