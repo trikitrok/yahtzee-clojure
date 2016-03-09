@@ -45,29 +45,32 @@
 (defn store-score [category score]
   (swap! scores-by-category assoc category score))
 
-(defn do-reruns [notify-fn roll-dice read-dice-to-rerun-input]
+(defn ask-which-dice-to-rerun [user-messaging-fn num-reruns]
+  (user-messaging-fn (str "[" num-reruns "] Dice to re-run:")))
+
+(defn do-reruns [user-messaging-fn notify-fn roll-dice read-dice-to-rerun-input]
   (doseq [num-reruns [1 2]]
-    (notifications/ask-which-dice-to-rerun notify-fn num-reruns)
+    (ask-which-dice-to-rerun user-messaging-fn num-reruns)
     (roll-dice (extract-dice (read-dice-to-rerun-input)))
     (notifications/notify-dice notify-fn @rolled-dice dice)))
 
-(defn play-category [notify-fn roll-dice read-dice-to-rerun-input category]
+(defn play-category [user-messaging-fn notify-fn roll-dice read-dice-to-rerun-input category]
   (notifications/notify-category notify-fn category)
   (initial-roll-dice roll-dice)
   (notifications/notify-dice notify-fn @rolled-dice dice)
-  (do-reruns notify-fn roll-dice read-dice-to-rerun-input)
+  (do-reruns user-messaging-fn notify-fn roll-dice read-dice-to-rerun-input)
   (store-score category (score-category category @rolled-dice))
   (notifications/notify-category-score notify-fn @scores-by-category category))
 
-(defn yahtzee [roll-dice read-dice-to-rerun-input notify-fn]
+(defn yahtzee [roll-dice read-dice-to-rerun-input notify-fn user-messaging-fn]
   (let [categories [:ones :twos :threes]]
     (doseq [category categories]
-      (play-category notify-fn roll-dice read-dice-to-rerun-input category))
+      (play-category user-messaging-fn notify-fn roll-dice read-dice-to-rerun-input category))
     (notifications/notify-scores-summary notify-fn categories @scores-by-category)))
 
-(defn make-yahtzee [roll read-dice-to-rerun-input notify-fn]
-  (partial yahtzee (partial roll-dice roll) read-dice-to-rerun-input notify-fn))
+(defn make-yahtzee [roll read-dice-to-rerun-input notify-fn user-messaging-fn]
+  (partial yahtzee (partial roll-dice roll) read-dice-to-rerun-input notify-fn user-messaging-fn))
 
 (defn -main [& args]
-  (let [yahtzee (make-yahtzee #(inc (rand-int 6)) read-line println)]
+  (let [yahtzee (make-yahtzee #(inc (rand-int 6)) read-line println println)]
     (yahtzee)))

@@ -28,9 +28,6 @@
                        " "
                        (map #(str % ":" (rolled-dice %)) dice)))))
 
-(defn ask-which-dice-to-rerun [notify-fn num-reruns]
-  (notify-fn (str "[" num-reruns "] Dice to re-run:")))
-
 (defn notify-category-score [notify-fn scores-by-category category]
   (notify-fn (str "Category " (titles-by-category category)
             " score: " (scores-by-category category))))
