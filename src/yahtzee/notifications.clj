@@ -8,14 +8,11 @@
 (defn- final-categories-score [categories scores-by-category]
   (reduce + (map scores-by-category categories)))
 
-(defn- produce-final-score-output [categories scores-by-category]
-  (str "Final score: " (final-categories-score categories scores-by-category)))
-
 (defn- notify-final-category-score [category scores-by-category]
   (println (str (titles-by-category category) ": " (scores-by-category category))))
 
 (defn- notify-final-score [categories scores-by-category]
-  (println (produce-final-score-output categories scores-by-category)))
+  (println (str "Final score: " (final-categories-score categories scores-by-category))))
 
 (defn notify-scores-summary [categories scores-by-category]
   (println "Yahtzee score")
