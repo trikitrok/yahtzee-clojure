@@ -1,11 +1,7 @@
-(ns yahtzee.core)
+(ns yahtzee.core
+  (:require [yahtzee.notifications :as notifications]))
 
 (def dice ["D1" "D2" "D3" "D4" "D5"])
-
-(def titles-by-category
-  {:ones "Ones"
-   :twos "Twos"
-   :threes "Threes"})
 
 (def rolled-dice
   (atom {"D1" nil "D2" nil "D3" nil "D4" nil "D5" nil}))
@@ -21,16 +17,6 @@
          merge
          (into {} (for [d dice] [d (roll)]))))
 
-(defn produce-dice-output [rolled-dice dice]
-  (str
-    "Dice: "
-    (clojure.string/join
-      " "
-      (map #(str % ":" (rolled-dice %)) dice))))
-
-(defn dice-to-rerun [roll-num]
-  (str "[" roll-num "] Dice to re-run:"))
-
 (defn extract-dice [input-str]
   (clojure.string/split input-str #" "))
 
@@ -42,9 +28,6 @@
        (second)
        (count)))
 
-(defn produce-category-title [category]
-  (str "Category: " (titles-by-category category)))
-
 (def score-fn-by-category
   {:ones (partial score 1)
    :twos (partial score 2)
@@ -52,10 +35,6 @@
 
 (defn score-category [category rolled-dice]
   ((score-fn-by-category category) rolled-dice))
-
-(defn produce-category-score-output [category score]
-  (str "Category " (titles-by-category category)
-       " score: " score))
 
 (defn initial-roll-dice [roll-dice]
   (if (empty? @initial-rolled-dice)
@@ -66,49 +45,22 @@
 (defn store-score [category score]
   (swap! scores-by-category assoc category score))
 
-(defn notify-category [category]
-  (println (produce-category-title category)))
-
-(defn notify-dice-output [rolled-dice dice]
-  (println (produce-dice-output rolled-dice dice)))
-
-(defn ask-which-dice-to-rerun [num-reruns]
-  (println (dice-to-rerun num-reruns)))
-
-(defn notify-category-score [scores-by-category category]
-  (println (produce-category-score-output category (scores-by-category category))))
-
 (defn play-category [roll-dice read-dice-to-rerun-input category]
-  (notify-category category)
+  (notifications/notify-category category)
   (initial-roll-dice roll-dice)
-  (notify-dice-output @rolled-dice dice)
+  (notifications/notify-dice-output @rolled-dice dice)
   (doseq [num-reruns [1 2]]
-    (ask-which-dice-to-rerun num-reruns)
+    (notifications/ask-which-dice-to-rerun num-reruns)
     (roll-dice (extract-dice (read-dice-to-rerun-input)))
-    (notify-dice-output @rolled-dice dice))
+    (notifications/notify-dice-output @rolled-dice dice))
   (store-score category (score-category category @rolled-dice))
-  (notify-category-score @scores-by-category category))
-
-(defn produce-short-category-score [category scores-by-category]
-  (str (titles-by-category category) ": " (scores-by-category category)))
-
-(defn final-categories-score [categories scores-by-category]
-  (reduce + (map scores-by-category categories)))
-
-(defn produce-final-score-output [categories scores-by-category]
-  (str "Final score: " (final-categories-score categories scores-by-category)))
-
-(defn notify-scores-summary [categories scores-by-category]
-  (println "Yahtzee score")
-  (doseq [category categories]
-    (println (produce-short-category-score category scores-by-category)))
-  (println (produce-final-score-output categories scores-by-category)))
+  (notifications/notify-category-score @scores-by-category category))
 
 (defn yahtzee [roll-dice read-dice-to-rerun-input]
   (let [categories [:ones :twos :threes]]
     (doseq [category categories]
     (play-category roll-dice read-dice-to-rerun-input category))
-    (notify-scores-summary categories @scores-by-category)))
+    (notifications/notify-scores-summary categories @scores-by-category)))
 
 (defn make-yahtzee [roll read-dice-to-rerun-input]
   (partial yahtzee (partial roll-dice roll) read-dice-to-rerun-input))
