@@ -26,7 +26,7 @@
 (def stubbed-roll
   (make-stub-producing-list stubbed-rands))
 
-(def stubbed-ask-dice-to-rerun
+(def stubbed-read-dice-to-rerun-input
   (make-stub-producing-list stubbed-dice-to-rerun-inputs))
 
 (facts
@@ -34,7 +34,7 @@
 
   (facts
     "about Round 1"
-    (let [yahtzee (make-yahtzee stubbed-roll stubbed-ask-dice-to-rerun)]
+    (let [yahtzee (make-yahtzee stubbed-roll stubbed-read-dice-to-rerun-input)]
       (fact
         "it prints the right output into the console"
         (let [cout (with-out-str (yahtzee))]

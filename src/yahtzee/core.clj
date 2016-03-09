@@ -75,13 +75,13 @@
 (defn ask-which-dice-to-rerun [num-reruns]
   (println (dice-to-rerun num-reruns)))
 
-(defn play-category [roll-dice ask-dice-to-rerun category]
+(defn play-category [roll-dice read-dice-to-rerun-input category]
   (notify-category category)
   (initial-roll-dice roll-dice)
   (notify-dice-output @rolled-dice dice)
   (doseq [num-reruns [1 2]]
     (ask-which-dice-to-rerun num-reruns)
-    (roll-dice (extract-dice (ask-dice-to-rerun)))
+    (roll-dice (extract-dice (read-dice-to-rerun-input)))
     (notify-dice-output @rolled-dice dice))
   (store-score category (score-category category @rolled-dice))
   (println (produce-category-score-output category (@scores-by-category category))))
@@ -101,14 +101,14 @@
     (println (produce-short-category-score category scores-by-category)))
   (println (produce-final-score-output categories scores-by-category)))
 
-(defn yahtzee [roll-dice ask-dice-to-rerun]
+(defn yahtzee [roll-dice read-dice-to-rerun-input]
   (let [categories [:ones :twos :threes]]
     (doseq [category categories]
-    (play-category roll-dice ask-dice-to-rerun category))
+    (play-category roll-dice read-dice-to-rerun-input category))
   (print-scores-summary categories @scores-by-category)))
 
-(defn make-yahtzee [roll ask-dice-to-rerun]
-  (partial yahtzee (partial roll-dice roll) ask-dice-to-rerun))
+(defn make-yahtzee [roll read-dice-to-rerun-input]
+  (partial yahtzee (partial roll-dice roll) read-dice-to-rerun-input))
 
 (defn -main [& args]
   (let [yahtzee (make-yahtzee #(inc (rand-int 6)) read-line)]
