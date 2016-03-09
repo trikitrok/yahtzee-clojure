@@ -21,7 +21,7 @@
          merge
          (into {} (for [d dice] [d (roll)]))))
 
-(defn produce-dice-output [rolled-dice]
+(defn produce-dice-output [rolled-dice dice]
   (str
     "Dice: "
     (clojure.string/join
@@ -69,11 +69,11 @@
 (defn play-category [roll-dice ask-dice-to-rerun category]
   (println (produce-category-title category))
   (initial-roll-dice roll-dice)
-  (println (produce-dice-output @rolled-dice))
+  (println (produce-dice-output @rolled-dice dice))
   (doseq [num-reruns [1 2]]
     (println (dice-to-rerun num-reruns))
     (roll-dice (extract-dice (ask-dice-to-rerun)))
-    (println (produce-dice-output @rolled-dice)))
+    (println (produce-dice-output @rolled-dice dice)))
   (store-score category (score-category category @rolled-dice))
   (println (produce-category-score-output category (@scores-by-category category))))
 
