@@ -5,13 +5,6 @@
    :twos "Twos"
    :threes "Threes"})
 
-(defn- produce-dice-output [rolled-dice dice]
-  (str
-    "Dice: "
-    (clojure.string/join
-      " "
-      (map #(str % ":" (rolled-dice %)) dice))))
-
 (defn- produce-category-title [category]
   (str "Category: " (titles-by-category category)))
 
@@ -38,7 +31,9 @@
   (println (produce-category-title category)))
 
 (defn notify-dice-output [rolled-dice dice]
-  (println (produce-dice-output rolled-dice dice)))
+  (println (str "Dice: " (clojure.string/join
+                           " "
+                           (map #(str % ":" (rolled-dice %)) dice)))))
 
 (defn ask-which-dice-to-rerun [num-reruns]
   (println (str "[" num-reruns "] Dice to re-run:")))
