@@ -5,9 +5,6 @@
    :twos "Twos"
    :threes "Threes"})
 
-(defn- produce-category-title [category]
-  (str "Category: " (titles-by-category category)))
-
 (defn- produce-category-score-output [category score]
   (str "Category " (titles-by-category category)
        " score: " score))
@@ -28,7 +25,7 @@
   (println (produce-final-score-output categories scores-by-category)))
 
 (defn notify-category [category]
-  (println (produce-category-title category)))
+  (println (str "Category: " (titles-by-category category))))
 
 (defn notify-dice-output [rolled-dice dice]
   (println (str "Dice: " (clojure.string/join
