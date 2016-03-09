@@ -34,7 +34,7 @@
 
   (facts
     "about Round 1"
-    (let [yahtzee (make-yahtzee stubbed-roll stubbed-read-dice-to-rerun-input println println)]
+    (let [yahtzee (make-yahtzee stubbed-roll stubbed-read-dice-to-rerun-input)]
       (fact
         "it prints the right output into the console"
         (let [cout (with-out-str (yahtzee))]
