@@ -1,5 +1,7 @@
 (ns yahtzee.core
-  (:require [yahtzee.notifications :as notifications]))
+  (:require
+    [yahtzee.notifications :as notifications]
+    [yahtzee.scoring :as scoring]))
 
 (def dice ["D1" "D2" "D3" "D4" "D5"])
 
@@ -19,22 +21,6 @@
 
 (defn extract-dice [input-str]
   (clojure.string/split input-str #" "))
-
-(defn score [value rolled-dice]
-  (->> rolled-dice
-       (group-by #(val %))
-       (filter #(= value (first %)))
-       (first)
-       (second)
-       (count)))
-
-(def score-fn-by-category
-  {:ones (partial score 1)
-   :twos (partial score 2)
-   :threes (partial score 3)})
-
-(defn score-category [category rolled-dice]
-  ((score-fn-by-category category) rolled-dice))
 
 (defn initial-roll-dice [roll-dice]
   (if (empty? @initial-rolled-dice)
@@ -59,7 +45,7 @@
   (initial-roll-dice roll-dice)
   (notifications/notify-dice @rolled-dice dice)
   (do-reruns roll-dice read-dice-to-rerun-input)
-  (store-score category (score-category category @rolled-dice))
+  (store-score category (scoring/score-category category @rolled-dice))
   (notifications/notify-category-score @scores-by-category category))
 
 (defn play-categories [roll-dice read-dice-to-rerun-input categories]
