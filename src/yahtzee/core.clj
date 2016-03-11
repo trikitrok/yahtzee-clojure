@@ -4,21 +4,24 @@
     [yahtzee.scoring :as scoring]
     [yahtzee.state :as state]))
 
-(def dice ["D1" "D2" "D3" "D4" "D5"])
+(def ^:private dice ["D1" "D2" "D3" "D4" "D5"])
 
-(defn extract-dice [input-str]
+(defn- extract-dice [input-str]
   (clojure.string/split input-str #" "))
 
-(defn ask-which-dice-to-rerun [num-reruns]
+(defn- ask-which-dice-to-rerun [num-reruns]
   (println (str "[" num-reruns "] Dice to re-run:")))
 
-(defn do-reruns [roll-dice read-dice-to-rerun-input]
+(defn- dice-to-rerun [read-dice-to-rerun-input]
+  (extract-dice (read-dice-to-rerun-input)))
+
+(defn- do-reruns [roll-dice read-dice-to-rerun-input]
   (doseq [num-reruns [1 2]]
     (ask-which-dice-to-rerun num-reruns)
-    (roll-dice (extract-dice (read-dice-to-rerun-input)))
+    (roll-dice (dice-to-rerun read-dice-to-rerun-input))
     (notifications/notify-dice (state/last-rolled-dice) dice)))
 
-(defn play-category [roll-dice read-dice-to-rerun-input category]
+(defn- play-category [roll-dice read-dice-to-rerun-input category]
   (notifications/notify-category category)
   (state/initial-roll-dice roll-dice dice)
   (notifications/notify-dice (state/last-rolled-dice) dice)
@@ -26,7 +29,7 @@
   (state/store-score category (scoring/score-category category (state/last-rolled-dice)))
   (notifications/notify-category-score category state/score-by-category))
 
-(defn play-categories [roll-dice read-dice-to-rerun-input categories]
+(defn- play-categories [roll-dice read-dice-to-rerun-input categories]
   (doseq [category categories]
     (play-category roll-dice read-dice-to-rerun-input category)))
 
