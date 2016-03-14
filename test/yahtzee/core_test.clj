@@ -2,39 +2,34 @@
   (:require [midje.sweet :refer :all]
             [yahtzee.core :refer :all]))
 
-(def stubbed-rands (atom [2 4 1 6 1
-                          1 5 2
-                          1 5
-                          2 3
-                          6 1 2
-                          5 1 3 2 3
-                          6 2 4]))
-
-(def stubbed-dice-to-rerun-inputs
-  (atom ["D1 D2 D4"
-         "D2 D4"
-         "D2 D5"
-         "D3 D4 D5"
-         "D1 D2 D3 D4 D5"
-         "D1 D2 D4"]))
-
-(defn make-stub-producing-list [atom-stub]
+(defn make-list-generator [atom-stub]
   #(let [next-val (first @atom-stub)]
     (swap! atom-stub rest)
     next-val))
-
-(def stubbed-roll
-  (make-stub-producing-list stubbed-rands))
-
-(def stubbed-read-dice-to-rerun-input
-  (make-stub-producing-list stubbed-dice-to-rerun-inputs))
 
 (facts
   "about Yahtzee kata"
 
   (facts
     "about Round 1"
-    (let [yahtzee (make-round1-yahtzee stubbed-roll stubbed-read-dice-to-rerun-input)]
+
+    (let [rands (atom [2 4 1 6 1
+                       1 5 2
+                       1 5
+                       2 3
+                       6 1 2
+                       5 1 3 2 3
+                       6 2 4])
+          dice-to-rerun (atom ["D1 D2 D4"
+                               "D2 D4"
+                               "D2 D5"
+                               "D3 D4 D5"
+                               "D1 D2 D3 D4 D5"
+                               "D1 D2 D4"])
+          stubbed-roll (make-list-generator rands)
+          stubbed-read-dice-to-rerun-input (make-list-generator dice-to-rerun)
+          yahtzee (make-round1-yahtzee stubbed-roll stubbed-read-dice-to-rerun-input)]
+
       (fact
         "it prints the right output into the console"
         (let [cout (with-out-str (yahtzee))]
