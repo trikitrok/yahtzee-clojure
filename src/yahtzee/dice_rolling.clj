@@ -6,16 +6,21 @@
 (def ^:private initial-rolled-dice
   (atom {}))
 
-(defn make-roll-dice [roll dice]
+(defn- update-rolled-dice! [new-rolled-dice]
   (swap! rolled-dice
          merge
-         (into {} (for [d dice] [d (roll)]))))
+         new-rolled-dice))
 
-(defn initial-roll-dice [roll-dice dice]
-  (if (empty? @initial-rolled-dice)
-    (do (roll-dice dice)
-        (reset! initial-rolled-dice @rolled-dice))
-    (reset! rolled-dice @initial-rolled-dice)))
+(defn- roll-all-dice [roll dice]
+  (into {} (for [d dice] [d (roll)])))
+
+(defn roll-dice [roll dice num-roll]
+  (if (zero? num-roll)
+    (if (empty? @initial-rolled-dice)
+      (do (update-rolled-dice! (roll-all-dice roll dice))
+          (reset! initial-rolled-dice @rolled-dice))
+      (reset! rolled-dice @initial-rolled-dice))
+    (update-rolled-dice! (roll-all-dice roll dice))))
 
 (defn last-rolled-dice []
   @rolled-dice)

@@ -17,31 +17,31 @@
 (defn- dice-to-rerun [read-dice-to-rerun-input]
   (extract-dice (read-dice-to-rerun-input)))
 
-(defn- do-reruns [roll-dice read-dice-to-rerun-input]
+(defn- do-reruns [roll read-dice-to-rerun-input]
   (doseq [num-reruns [1 2]]
     (ask-which-dice-to-rerun num-reruns)
-    (roll-dice (dice-to-rerun read-dice-to-rerun-input))
+    (dice-rolling/roll-dice roll (dice-to-rerun read-dice-to-rerun-input) num-reruns)
     (notifications/notify-dice (dice-rolling/last-rolled-dice) dice)))
 
-(defn- play-category [roll-dice read-dice-to-rerun-input category]
+(defn- play-category [roll read-dice-to-rerun-input category]
   (notifications/notify-category category)
-  (dice-rolling/initial-roll-dice roll-dice dice)
+  (dice-rolling/roll-dice roll dice 0)
   (notifications/notify-dice (dice-rolling/last-rolled-dice) dice)
-  (do-reruns roll-dice read-dice-to-rerun-input)
+  (do-reruns roll read-dice-to-rerun-input)
   (game-score/save category (dice-scoring/score category (dice-rolling/last-rolled-dice)))
   (notifications/notify-category-score category game-score/score-by-category))
 
-(defn- play-categories [roll-dice read-dice-to-rerun-input categories]
+(defn- play-categories [roll read-dice-to-rerun-input categories]
   (doseq [category categories]
-    (play-category roll-dice read-dice-to-rerun-input category)))
+    (play-category roll read-dice-to-rerun-input category)))
 
-(defrecord Round1Game [roll-dice read-dice-to-rerun-input]
+(defrecord Round1Game [roll read-dice-to-rerun-input]
   game-sequence/GameSequence
   (play [_]
     (let [categories [:ones :twos :threes]]
-      (play-categories roll-dice read-dice-to-rerun-input categories)
+      (play-categories roll read-dice-to-rerun-input categories)
       (notifications/notify-scores-summary categories game-score/score-by-category)
       (notifications/notify-final-score (game-score/final-categories-score categories)))))
 
 (defn make [roll read-dice-to-rerun-input]
-  (->Round1Game (partial dice-rolling/make-roll-dice roll) read-dice-to-rerun-input))
+  (->Round1Game roll read-dice-to-rerun-input))
