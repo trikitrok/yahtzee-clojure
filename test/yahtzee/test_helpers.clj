@@ -11,15 +11,16 @@
 (def game-factories-by-round
   {:round1 make-round1-yahtzee})
 
-(defn make-yahtze [& {:keys [for-round using-as-rands rerunning-dice]}]
+(defn- make-yahtze [{:keys [for-round using-as-rands rerunning-dice]}]
   (let [make-yahtzee (game-factories-by-round for-round)
         stubbed-roll (make-list-generator using-as-rands)
         stubbed-read-dice-to-rerun-input (make-list-generator rerunning-dice)]
     yahtzee (make-yahtzee stubbed-roll stubbed-read-dice-to-rerun-input)))
 
 
-(defn output-lines-of-running [yahtzee]
-  (let [cout (with-out-str (yahtzee))]
+(defn output-lines-of-running-yahtzee [& {:as params}]
+  (let [yahtzee (make-yahtze params)
+        cout (with-out-str (yahtzee))]
     (clojure.string/split
       cout
       #"\n")))
