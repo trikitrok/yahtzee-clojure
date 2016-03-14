@@ -5,7 +5,7 @@
 (defn start []
   (->RolledDiceRecording
     (atom {})
-    (atom {"D1" nil "D2" nil "D3" nil "D4" nil "D5" nil})))
+    (atom {:d1 nil :d2 nil :d3 nil :d4 nil :d5 nil})))
 
 (defn update-last! [rolled-dice new-rolled-dice]
   (swap! (:last rolled-dice)

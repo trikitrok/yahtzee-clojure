@@ -1,9 +1,16 @@
-(ns yahtzee.notifications)
+(ns yahtzee.notifications
+  (:require
+    [clojure.string :as string]))
 
 (def ^:private titles-by-category
   {:ones "Ones"
    :twos "Twos"
    :threes "Threes"})
+
+(defn- rolled-dice->str [rolled-dice dice]
+  (->> dice
+       (map #(str (string/capitalize (name %)) ":" (rolled-dice %)))
+       (string/join " ")))
 
 (defn notify-final-category-score [category score]
   (println (str (titles-by-category category) ": " score)))
@@ -20,11 +27,7 @@
   (println (str "Category: " (titles-by-category category))))
 
 (defn notify-dice [rolled-dice dice]
-  (println
-    (str "Dice: "
-         (clojure.string/join
-           " "
-           (map #(str % ":" (rolled-dice %)) dice)))))
+  (println (str "Dice: " (rolled-dice->str rolled-dice dice))))
 
 (defn notify-category-score [category score-by]
   (println (str "Category " (titles-by-category category)

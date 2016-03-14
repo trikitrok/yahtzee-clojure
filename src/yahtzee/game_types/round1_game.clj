@@ -5,12 +5,15 @@
     [yahtzee.dice-rolling :as dice-rolling]
     [yahtzee.dice-scoring :as dice-scoring]
     [yahtzee.game-sequence :as game-sequence]
-    [yahtzee.rolls-history :as rolls-history]))
+    [yahtzee.rolls-history :as rolls-history]
+    [clojure.string :as string]))
 
-(def ^:private dice ["D1" "D2" "D3" "D4" "D5"])
+(def ^:private dice [:d1 :d2 :d3 :d4 :d5])
 
 (defn- extract-dice [input-str]
-  (clojure.string/split input-str #" "))
+  (->> (string/split input-str #" ")
+       (map clojure.string/lower-case)
+       (map keyword)))
 
 (defn- ask-which-dice-to-rerun [num-reruns]
   (println (str "[" num-reruns "] Dice to re-run:")))
