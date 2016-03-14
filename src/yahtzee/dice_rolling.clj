@@ -1,12 +1,9 @@
-(ns yahtzee.state)
+(ns yahtzee.dice-rolling)
 
 (def ^:private rolled-dice
   (atom {"D1" nil "D2" nil "D3" nil "D4" nil "D5" nil}))
 
 (def ^:private initial-rolled-dice
-  (atom {}))
-
-(def ^:private scores-by-category
   (atom {}))
 
 (defn roll-dice [roll dice]
@@ -20,16 +17,5 @@
         (reset! initial-rolled-dice @rolled-dice))
     (reset! rolled-dice @initial-rolled-dice)))
 
-(defn store-score [category score]
-  (swap! scores-by-category assoc category score))
-
 (defn last-rolled-dice []
   @rolled-dice)
-
-(defn score-by-category [category]
-  (@scores-by-category category))
-
-(defn final-categories-score [categories]
-  (reduce + (map score-by-category categories)))
-
-
