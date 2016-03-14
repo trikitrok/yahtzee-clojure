@@ -1,9 +1,9 @@
-(ns yahtzee.current-score)
+(ns yahtzee.game-score)
 
 (def ^:private scores-by-category
   (atom {}))
 
-(defn store-score [category score]
+(defn save [category score]
   (swap! scores-by-category assoc category score))
 
 (defn score-by-category [category]

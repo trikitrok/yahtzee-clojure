@@ -3,7 +3,7 @@
     [yahtzee.notifications :as notifications]
     [yahtzee.dice-scoring :as dice-scoring]
     [yahtzee.dice-rolling :as dice-rolling]
-    [yahtzee.current-score :as current-score]))
+    [yahtzee.game-score :as game-score]))
 
 (def ^:private dice ["D1" "D2" "D3" "D4" "D5"])
 
@@ -27,8 +27,8 @@
   (dice-rolling/initial-roll-dice roll-dice dice)
   (notifications/notify-dice (dice-rolling/last-rolled-dice) dice)
   (do-reruns roll-dice read-dice-to-rerun-input)
-  (current-score/store-score category (dice-scoring/score category (dice-rolling/last-rolled-dice)))
-  (notifications/notify-category-score category current-score/score-by-category))
+  (game-score/save category (dice-scoring/score category (dice-rolling/last-rolled-dice)))
+  (notifications/notify-category-score category game-score/score-by-category))
 
 (defn- play-categories [roll-dice read-dice-to-rerun-input categories]
   (doseq [category categories]
@@ -37,8 +37,8 @@
 (defn yahtzee [roll-dice read-dice-to-rerun-input]
   (let [categories [:ones :twos :threes]]
     (play-categories roll-dice read-dice-to-rerun-input categories)
-    (notifications/notify-scores-summary categories current-score/score-by-category)
-    (notifications/notify-final-score (current-score/final-categories-score categories))))
+    (notifications/notify-scores-summary categories game-score/score-by-category)
+    (notifications/notify-final-score (game-score/final-categories-score categories))))
 
 (defn make-yahtzee [roll read-dice-to-rerun-input]
   (partial yahtzee (partial dice-rolling/roll-dice roll) read-dice-to-rerun-input))
