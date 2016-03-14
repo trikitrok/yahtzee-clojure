@@ -2,7 +2,7 @@
 
 (defrecord RolledDiceRecording [initial last])
 
-(defn make []
+(defn start []
   (->RolledDiceRecording
     (atom {})
     (atom {"D1" nil "D2" nil "D3" nil "D4" nil "D5" nil})))

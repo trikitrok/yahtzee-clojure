@@ -53,6 +53,6 @@
 (defn make [roll read-dice-to-rerun-input]
   (->Round1Game
     (score/start)
-    (rolls-history/make)
+    (rolls-history/start)
     roll
     read-dice-to-rerun-input))
