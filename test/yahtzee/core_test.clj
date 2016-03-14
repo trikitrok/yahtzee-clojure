@@ -1,6 +1,8 @@
 (ns yahtzee.core-test
-  (:require [midje.sweet :refer :all]
-            [yahtzee.core :refer :all]))
+  (:require
+    [midje.sweet :refer :all]
+    [yahtzee.core :refer :all]
+    [yahtzee.test-helpers :as helpers]))
 
 (defn make-list-generator [atom-stub]
   #(let [next-val (first @atom-stub)]
@@ -13,29 +15,26 @@
   (facts
     "about Round 1"
 
-    (let [rands (atom [2 4 1 6 1
-                       1 5 2
-                       1 5
-                       2 3
-                       6 1 2
-                       5 1 3 2 3
-                       6 2 4])
-          dice-to-rerun (atom ["D1 D2 D4"
-                               "D2 D4"
-                               "D2 D5"
-                               "D3 D4 D5"
-                               "D1 D2 D3 D4 D5"
-                               "D1 D2 D4"])
-          stubbed-roll (make-list-generator rands)
-          stubbed-read-dice-to-rerun-input (make-list-generator dice-to-rerun)
-          yahtzee (make-round1-yahtzee stubbed-roll stubbed-read-dice-to-rerun-input)]
+    (let [yahtzee (helpers/make-yahtze
+                    :for-round :round1
+                    :using-as-rands [2 4 1 6 1
+                                     1 5 2
+                                     1 5
+                                     2 3
+                                     6 1 2
+                                     5 1 3 2 3
+                                     6 2 4]
+                    :rerunning-dice ["D1 D2 D4"
+                                     "D2 D4"
+                                     "D2 D5"
+                                     "D3 D4 D5"
+                                     "D1 D2 D3 D4 D5"
+                                     "D1 D2 D4"])]
 
       (fact
         "it prints the right output into the console"
-        (let [cout (with-out-str (yahtzee))]
-          (clojure.string/split
-            cout
-            #"\n") => ["Category: Ones"
+        (helpers/output-lines-of-running
+          yahtzee) => ["Category: Ones"
                        "Dice: D1:2 D2:4 D3:1 D4:6 D5:1"
                        "[1] Dice to re-run:"
                        "Dice: D1:1 D2:5 D3:1 D4:2 D5:1"
@@ -60,4 +59,4 @@
                        "Ones: 4"
                        "Twos: 3"
                        "Threes: 2"
-                       "Final score: 9"])))))
+                       "Final score: 9"]))))
