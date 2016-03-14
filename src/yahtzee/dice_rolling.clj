@@ -6,7 +6,7 @@
 (def ^:private initial-rolled-dice
   (atom {}))
 
-(defn roll-dice [roll dice]
+(defn make-roll-dice [roll dice]
   (swap! rolled-dice
          merge
          (into {} (for [d dice] [d (roll)]))))

@@ -44,4 +44,4 @@
       (notifications/notify-final-score (game-score/final-categories-score categories)))))
 
 (defn make [roll read-dice-to-rerun-input]
-  (->Round1Game (partial dice-rolling/roll-dice roll) read-dice-to-rerun-input))
+  (->Round1Game (partial dice-rolling/make-roll-dice roll) read-dice-to-rerun-input))
