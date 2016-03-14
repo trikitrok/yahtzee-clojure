@@ -4,7 +4,8 @@
     [yahtzee.game-score :as game-score]
     [yahtzee.dice-rolling :as dice-rolling]
     [yahtzee.dice-scoring :as dice-scoring]
-    [yahtzee.game-sequence :as game-sequence]))
+    [yahtzee.game-sequence :as game-sequence]
+    [yahtzee.rolls-history :as rolls-history]))
 
 (def ^:private dice ["D1" "D2" "D3" "D4" "D5"])
 
@@ -17,31 +18,34 @@
 (defn- dice-to-rerun [read-dice-to-rerun-input]
   (extract-dice (read-dice-to-rerun-input)))
 
-(defn- do-reruns [roll read-dice-to-rerun-input]
+(defn- do-reruns [{:keys [rolled-dice roll read-dice-to-rerun-input]}]
   (doseq [num-reruns [1 2]]
     (ask-which-dice-to-rerun num-reruns)
-    (dice-rolling/roll-dice roll (dice-to-rerun read-dice-to-rerun-input) num-reruns)
-    (notifications/notify-dice (dice-rolling/last-rolled-dice) dice)))
+    (dice-rolling/roll-dice rolled-dice roll (dice-to-rerun read-dice-to-rerun-input) num-reruns)
+    (notifications/notify-dice (rolls-history/the-last rolled-dice) dice)))
 
-(defn- play-category [roll read-dice-to-rerun-input category]
+(defn- play-category [{:keys [rolled-dice roll] :as game} category]
   (notifications/notify-category category)
-  (dice-rolling/roll-dice roll dice 0)
-  (notifications/notify-dice (dice-rolling/last-rolled-dice) dice)
-  (do-reruns roll read-dice-to-rerun-input)
-  (game-score/save category (dice-scoring/score category (dice-rolling/last-rolled-dice)))
+  (dice-rolling/roll-dice rolled-dice roll dice 0)
+  (notifications/notify-dice (rolls-history/the-last rolled-dice) dice)
+  (do-reruns game)
+  (game-score/save category (dice-scoring/score category (rolls-history/the-last rolled-dice)))
   (notifications/notify-category-score category game-score/score-by-category))
 
-(defn- play-categories [roll read-dice-to-rerun-input categories]
+(defn- play-categories [this categories]
   (doseq [category categories]
-    (play-category roll read-dice-to-rerun-input category)))
+    (play-category this category)))
 
-(defrecord Round1Game [roll read-dice-to-rerun-input]
+(defrecord Round1Game [rolled-dice roll read-dice-to-rerun-input]
   game-sequence/GameSequence
-  (play [_]
+  (play [this]
     (let [categories [:ones :twos :threes]]
-      (play-categories roll read-dice-to-rerun-input categories)
+      (play-categories this categories)
       (notifications/notify-scores-summary categories game-score/score-by-category)
       (notifications/notify-final-score (game-score/final-categories-score categories)))))
 
 (defn make [roll read-dice-to-rerun-input]
-  (->Round1Game roll read-dice-to-rerun-input))
+  (->Round1Game
+    (rolls-history/make)
+    roll
+    read-dice-to-rerun-input))
