@@ -1,7 +1,7 @@
 (ns yahtzee.core
   (:require
     [yahtzee.notifications :as notifications]
-    [yahtzee.scoring :as scoring]
+    [yahtzee.dice-scoring :as dice-scoring]
     [yahtzee.dice-rolling :as dice-rolling]
     [yahtzee.current-score :as current-score]))
 
@@ -27,7 +27,7 @@
   (dice-rolling/initial-roll-dice roll-dice dice)
   (notifications/notify-dice (dice-rolling/last-rolled-dice) dice)
   (do-reruns roll-dice read-dice-to-rerun-input)
-  (current-score/store-score category (scoring/score-category category (dice-rolling/last-rolled-dice)))
+  (current-score/store-score category (dice-scoring/score category (dice-rolling/last-rolled-dice)))
   (notifications/notify-category-score category current-score/score-by-category))
 
 (defn- play-categories [roll-dice read-dice-to-rerun-input categories]

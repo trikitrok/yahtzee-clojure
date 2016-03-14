@@ -1,6 +1,6 @@
-(ns yahtzee.scoring)
+(ns yahtzee.dice-scoring)
 
-(defn- score [value rolled-dice]
+(defn- score-dice [value rolled-dice]
   (->> rolled-dice
        (group-by #(val %))
        (filter #(= value (first %)))
@@ -9,9 +9,9 @@
        (count)))
 
 (def ^:private score-fn-by-category
-  {:ones (partial score 1)
-   :twos (partial score 2)
-   :threes (partial score 3)})
+  {:ones (partial score-dice 1)
+   :twos (partial score-dice 2)
+   :threes (partial score-dice 3)})
 
-(defn score-category [category rolled-dice]
+(defn score [category rolled-dice]
   ((score-fn-by-category category) rolled-dice))
