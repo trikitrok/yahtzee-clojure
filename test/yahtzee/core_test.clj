@@ -4,11 +4,6 @@
     [yahtzee.core :refer :all]
     [yahtzee.test-helpers :as helpers]))
 
-(defn make-list-generator [atom-stub]
-  #(let [next-val (first @atom-stub)]
-    (swap! atom-stub rest)
-    next-val))
-
 (facts
   "about Yahtzee kata"
 
