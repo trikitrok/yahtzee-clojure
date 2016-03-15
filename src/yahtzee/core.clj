@@ -9,6 +9,9 @@
 (defn make-round1-yahtzee [roll read-dice-to-rerun-input]
   (partial yahtzee (round1-game/make roll read-dice-to-rerun-input)))
 
+(defn make-round2-yahtzee [roll read-dice-to-rerun-input]
+  #(constantly ""))
+
 (defn -main [& args]
   (let [yahtzee (round1-game/make #(inc (rand-int 6)) read-line)]
     (play yahtzee)))

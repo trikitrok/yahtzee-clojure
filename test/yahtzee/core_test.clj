@@ -8,8 +8,7 @@
   "about Yahtzee kata"
 
   (fact
-    "about Round 1"
-
+    "about game described in kata's round 1"
       (helpers/output-lines-of-running-yahtzee
         :for-round :round1
         :using-as-rands [2 4 1 6 1
@@ -49,4 +48,11 @@
                                           "Ones: 4"
                                           "Twos: 3"
                                           "Threes: 2"
-                                          "Final score: 9"]))
+                                          "Final score: 9"])
+
+  (fact
+    "about game described in kata's round 2"
+    (helpers/output-lines-of-running-yahtzee
+      :for-round :round2
+      :using-as-rands []
+      :rerunning-dice []) => [""]))

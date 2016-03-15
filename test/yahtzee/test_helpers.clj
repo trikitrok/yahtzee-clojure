@@ -9,7 +9,8 @@
       next-val)))
 
 (def game-factories-by-round
-  {:round1 make-round1-yahtzee})
+  {:round1 make-round1-yahtzee
+   :round2 make-round2-yahtzee})
 
 (defn- make-yahtze [{:keys [for-round using-as-rands rerunning-dice]}]
   (let [make-yahtzee (game-factories-by-round for-round)
