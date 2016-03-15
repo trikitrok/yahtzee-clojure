@@ -10,7 +10,7 @@
 (def ^:private dice [:d1 :d2 :d3 :d4 :d5])
 
 (def selected-categories
-  (atom (sorted-set)))
+  (atom []))
 
 (defn- extract-dice [input-str]
   (->> (string/split input-str #" ")
@@ -47,12 +47,19 @@
   (last @selected-categories))
 
 (defn- available-categories [categories]
-  (filter #(not (contains? @selected-categories %)) categories))
+  (filter #(not (contains? (set @selected-categories) %)) categories))
 
 (defrecord Round1Game [score-so-far rolled-dice roll read-user-input]
   game-sequence/GameSequence
   (play [this]
     (let [categories [:ones :twos :threes]]
+      (dice-rolling/first-roll-dice rolled-dice roll dice)
+      (notifications/notify-dice (rolls-history/the-last rolled-dice) dice)
+      (do-reruns this)
+      (notifications/notify-available-categories (available-categories categories))
+      (select-category (category-to-add-input-to (read-user-input)))
+      (notifications/notify-adding-points-to (last-selected-category))
+
       (dice-rolling/first-roll-dice rolled-dice roll dice)
       (notifications/notify-dice (rolls-history/the-last rolled-dice) dice)
       (do-reruns this)

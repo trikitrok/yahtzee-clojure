@@ -58,13 +58,18 @@
                        1 5 2
                        1 5
                        1 5 2
-                       2 4 5]
+                       2 4 5
+                       3 1
+                       4 2 6]
       :and-user-input ["D1 D2 D4"
                        "D2 D4"
                        "1"
                        "D1 D2 D4"
                        "D1 D2 D5"
-                       "2"]) => ["Dice: D1:2 D2:4 D3:1 D4:6 D5:1"
+                       "2"
+                       "D2 D4"
+                       "D1 D3 D5"
+                       "3"]) => ["Dice: D1:2 D2:4 D3:1 D4:6 D5:1"
                                         "[1] Dice to re-run:"
                                         "Dice: D1:1 D2:5 D3:1 D4:2 D5:1"
                                         "[2] Dice to re-run:"
@@ -82,4 +87,12 @@
                                         "Available categories:"
                                         "[2] Twos"
                                         "[3] Threes"
-                                        "Category to add points to: 2"]))
+                                        "Category to add points to: 2"
+                                        "Dice: D1:2 D2:4 D3:1 D4:6 D5:1"
+                                        "[1] Dice to re-run:"
+                                        "Dice: D1:2 D2:3 D3:1 D4:1 D5:1"
+                                        "[2] Dice to re-run:"
+                                        "Dice: D1:4 D2:3 D3:2 D4:1 D5:6"
+                                        "Available categories:"
+                                        "[3] Threes"
+                                        "Category to add points to: 3"]))
