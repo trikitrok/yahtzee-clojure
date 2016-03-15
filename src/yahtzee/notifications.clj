@@ -34,8 +34,8 @@
                 " score: " (score-by category))))
 
 (defn notify-available-categories [categories]
-  (println
-    (string/join
-      "\n"
-      (cons "Available categories:"
-            (map-indexed #(str "[" (inc %1) "] " (titles-by-category %2)) categories)))))
+  (->> categories
+       (map-indexed #(str "[" (inc %1) "] " (titles-by-category %2)))
+       (cons "Available categories:")
+       (string/join "\n")
+       (println)))
