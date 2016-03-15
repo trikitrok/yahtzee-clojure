@@ -5,7 +5,8 @@
     [yahtzee.dice-rolling :as dice-rolling]
     [yahtzee.game-sequence :as game-sequence]
     [yahtzee.rolls-history :as rolls-history]
-    [clojure.string :as string]))
+    [clojure.string :as string]
+    [yahtzee.dice-scoring :as dice-scoring]))
 
 (def ^:private dice [:d1 :d2 :d3 :d4 :d5])
 
@@ -49,6 +50,12 @@
 (defn- available-categories [categories]
   (filter #(not (contains? (set @selected-categories) %)) categories))
 
+(defn annotate-to-category [score-so-far category rolled-dice]
+  (score/annotate-to-category
+    score-so-far
+    category
+    (dice-scoring/score category (rolls-history/the-last rolled-dice))))
+
 (defrecord Round1Game [score-so-far rolled-dice roll read-user-input]
   game-sequence/GameSequence
   (play [this]
@@ -58,6 +65,7 @@
       (do-reruns this)
       (notifications/notify-available-categories (available-categories categories))
       (select-category (category-to-add-input-to (read-user-input)))
+      (annotate-to-category score-so-far (last-selected-category) rolled-dice)
       (notifications/notify-adding-points-to (last-selected-category))
 
       (dice-rolling/first-roll-dice rolled-dice roll dice)
@@ -65,6 +73,7 @@
       (do-reruns this)
       (notifications/notify-available-categories (available-categories categories))
       (select-category (category-to-add-input-to (read-user-input)))
+      (annotate-to-category score-so-far (last-selected-category) rolled-dice)
       (notifications/notify-adding-points-to (last-selected-category))
 
       (dice-rolling/first-roll-dice rolled-dice roll dice)
@@ -72,7 +81,10 @@
       (do-reruns this)
       (notifications/notify-available-categories (available-categories categories))
       (select-category (category-to-add-input-to (read-user-input)))
+      (annotate-to-category score-so-far (last-selected-category) rolled-dice)
       (notifications/notify-adding-points-to (last-selected-category))
+      (notifications/notify-scores-summary categories (partial score/for-category score-so-far))
+      (notifications/notify-final-score (score/total-for-categories score-so-far categories))
       )
 
     ))
