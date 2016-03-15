@@ -57,15 +57,16 @@
       (notifications/notify-dice (rolls-history/the-last rolled-dice) dice)
       (do-reruns this)
       (notifications/notify-available-categories (available-categories categories))
-
       (select-category (category-to-add-input-to (read-user-input)))
-
       (notifications/notify-adding-points-to (last-selected-category))
 
       (dice-rolling/first-roll-dice rolled-dice roll dice)
       (notifications/notify-dice (rolls-history/the-last rolled-dice) dice)
       (do-reruns this)
-      (notifications/notify-available-categories (available-categories categories)))
+      (notifications/notify-available-categories (available-categories categories))
+      (select-category (category-to-add-input-to (read-user-input)))
+      (notifications/notify-adding-points-to (last-selected-category))
+      )
 
     ))
 
