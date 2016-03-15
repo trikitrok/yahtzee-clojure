@@ -32,3 +32,10 @@
 (defn notify-category-score [category score-by]
   (println (str "Category " (titles-by-category category)
                 " score: " (score-by category))))
+
+(defn notify-available-categories [categories]
+  (println
+    (string/join
+      "\n"
+      (cons "Available categories:"
+            (map-indexed #(str "[" (inc %1) "] " (titles-by-category %2)) categories)))))
