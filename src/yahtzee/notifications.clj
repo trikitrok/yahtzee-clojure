@@ -39,11 +39,11 @@
                 " score: " (score-by category))))
 
 (defn notify-adding-points-to [category]
-  (println (str "Category to add points to: " category)))
+  (println (str "Category to add points to: " (nums-by-category category))))
 
 (defn notify-available-categories [categories]
   (->> categories
-       (map #(str "[" (nums-by-category %) "] " (titles-by-category %1)))
+       (map #(str "[" (nums-by-category %) "] " (titles-by-category %)))
        (cons "Available categories:")
        (string/join "\n")
        (println)))

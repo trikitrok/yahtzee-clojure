@@ -9,6 +9,9 @@
 
 (def ^:private dice [:d1 :d2 :d3 :d4 :d5])
 
+(def selected-categories
+  (atom (sorted-set)))
+
 (defn- extract-dice [input-str]
   (->> (string/split input-str #" ")
        (map clojure.string/lower-case)
@@ -20,8 +23,13 @@
 (defn- dice-to-rerun [read-user-input]
   (extract-dice (read-user-input)))
 
-(defn- category-to-add-input-to [read-user-input]
-  (read-user-input))
+(def categories-by-input
+  {"1" :ones
+   "2" :twos
+   "3" :threes})
+
+(defn- category-to-add-input-to [input-category-num]
+  (categories-by-input input-category-num))
 
 (defn- do-reruns [{:keys [rolled-dice roll read-user-input]}]
   (doseq [num-reruns [1 2]]
@@ -29,19 +37,37 @@
     (dice-rolling/roll-dice rolled-dice roll (dice-to-rerun read-user-input))
     (notifications/notify-dice (rolls-history/the-last rolled-dice) dice)))
 
+(defn- select-category [c]
+  (swap!
+    selected-categories
+    conj
+    c))
+
+(defn- last-selected-category []
+  (last @selected-categories))
+
+(defn- available-categories [categories]
+  (filter #(not (contains? @selected-categories %)) categories))
+
 (defrecord Round1Game [score-so-far rolled-dice roll read-user-input]
   game-sequence/GameSequence
   (play [this]
-    (dice-rolling/first-roll-dice rolled-dice roll dice)
-    (notifications/notify-dice (rolls-history/the-last rolled-dice) dice)
-    (do-reruns this)
-    (notifications/notify-available-categories [:ones :twos :threes])
-    (notifications/notify-adding-points-to (category-to-add-input-to read-user-input))
+    (let [categories [:ones :twos :threes]]
+      (dice-rolling/first-roll-dice rolled-dice roll dice)
+      (notifications/notify-dice (rolls-history/the-last rolled-dice) dice)
+      (do-reruns this)
+      (notifications/notify-available-categories (available-categories categories))
 
-    (dice-rolling/first-roll-dice rolled-dice roll dice)
-    (notifications/notify-dice (rolls-history/the-last rolled-dice) dice)
-    (do-reruns this)
-    (notifications/notify-available-categories [:twos :threes])))
+      (select-category (category-to-add-input-to (read-user-input)))
+
+      (notifications/notify-adding-points-to (last-selected-category))
+
+      (dice-rolling/first-roll-dice rolled-dice roll dice)
+      (notifications/notify-dice (rolls-history/the-last rolled-dice) dice)
+      (do-reruns this)
+      (notifications/notify-available-categories (available-categories categories)))
+
+    ))
 
 (defn make [roll read-user-input]
   (->Round1Game
