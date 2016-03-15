@@ -58,7 +58,8 @@
                        1 5 2
                        1 5]
       :rerunning-dice ["D1 D2 D4"
-                       "D2 D4"]) => ["Dice: D1:2 D2:4 D3:1 D4:6 D5:1"
+                       "D2 D4"
+                       "1"]) => ["Dice: D1:2 D2:4 D3:1 D4:6 D5:1"
                                      "[1] Dice to re-run:"
                                      "Dice: D1:1 D2:5 D3:1 D4:2 D5:1"
                                      "[2] Dice to re-run:"
@@ -66,4 +67,5 @@
                                      "Available categories:"
                                      "[1] Ones"
                                      "[2] Twos"
-                                     "[3] Threes"]))
+                                     "[3] Threes"
+                                     "Category to add points to: 1"]))

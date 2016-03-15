@@ -33,6 +33,9 @@
   (println (str "Category " (titles-by-category category)
                 " score: " (score-by category))))
 
+(defn notify-adding-points-to []
+  (println "Category to add points to: 1"))
+
 (defn notify-available-categories [categories]
   (->> categories
        (map-indexed #(str "[" (inc %1) "] " (titles-by-category %2)))
