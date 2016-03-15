@@ -7,6 +7,11 @@
    :twos "Twos"
    :threes "Threes"})
 
+(def ^:private nums-by-category
+  {:ones 1
+   :twos 2
+   :threes 3})
+
 (defn- rolled-dice->str [rolled-dice dice]
   (->> dice
        (map #(str (string/capitalize (name %)) ":" (rolled-dice %)))
@@ -38,7 +43,7 @@
 
 (defn notify-available-categories [categories]
   (->> categories
-       (map-indexed #(str "[" (inc %1) "] " (titles-by-category %2)))
+       (map #(str "[" (nums-by-category %) "] " (titles-by-category %1)))
        (cons "Available categories:")
        (string/join "\n")
        (println)))

@@ -41,7 +41,7 @@
     (dice-rolling/first-roll-dice rolled-dice roll dice)
     (notifications/notify-dice (rolls-history/the-last rolled-dice) dice)
     (do-reruns this)
-    ))
+    (notifications/notify-available-categories [:twos :threes])))
 
 (defn make [roll read-user-input]
   (->Round1Game

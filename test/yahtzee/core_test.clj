@@ -77,4 +77,7 @@
                                         "[1] Dice to re-run:"
                                         "Dice: D1:1 D2:5 D3:1 D4:2 D5:1"
                                         "[2] Dice to re-run:"
-                                        "Dice: D1:2 D2:4 D3:1 D4:2 D5:5"]))
+                                        "Dice: D1:2 D2:4 D3:1 D4:2 D5:5"
+                                        "Available categories:"
+                                        "[2] Twos"
+                                        "[3] Threes"]))
