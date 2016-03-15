@@ -7,11 +7,11 @@
 (defn yahtzee [game]
   (play game))
 
-(defn make-round1-yahtzee [roll read-dice-to-rerun-input]
-  #(yahtzee (round1-game/make roll read-dice-to-rerun-input)))
+(defn make-round1-yahtzee [roll read-user-input]
+  #(yahtzee (round1-game/make roll read-user-input)))
 
-(defn make-round2-yahtzee [roll read-dice-to-rerun-input]
-  #(yahtzee (round2-game/make roll read-dice-to-rerun-input)))
+(defn make-round2-yahtzee [roll read-user-input]
+  #(yahtzee (round2-game/make roll read-user-input)))
 
 (defn -main [& args]
   (let [yahtzee (round1-game/make #(inc (rand-int 6)) read-line)]

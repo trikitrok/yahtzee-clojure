@@ -18,13 +18,13 @@
 (defn- ask-which-dice-to-rerun [num-reruns]
   (println (str "[" num-reruns "] Dice to re-run:")))
 
-(defn- dice-to-rerun [read-dice-to-rerun-input]
-  (extract-dice (read-dice-to-rerun-input)))
+(defn- dice-to-rerun [read-user-input]
+  (extract-dice (read-user-input)))
 
-(defn- do-reruns [{:keys [rolled-dice roll read-dice-to-rerun-input]}]
+(defn- do-reruns [{:keys [rolled-dice roll read-user-input]}]
   (doseq [num-reruns [1 2]]
     (ask-which-dice-to-rerun num-reruns)
-    (dice-rolling/roll-dice rolled-dice roll (dice-to-rerun read-dice-to-rerun-input) num-reruns)
+    (dice-rolling/roll-dice rolled-dice roll (dice-to-rerun read-user-input))
     (notifications/notify-dice (rolls-history/the-last rolled-dice) dice)))
 
 (defn annotate-to-category [score-so-far category rolled-dice]
@@ -35,7 +35,7 @@
 
 (defn- play-category [{:keys [score-so-far rolled-dice roll] :as game} category]
   (notifications/notify-category category)
-  (dice-rolling/roll-dice rolled-dice roll dice 0)
+  (dice-rolling/first-roll-dice rolled-dice roll dice)
   (notifications/notify-dice (rolls-history/the-last rolled-dice) dice)
   (do-reruns game)
   (annotate-to-category score-so-far category rolled-dice)
@@ -45,7 +45,7 @@
   (doseq [category categories]
     (play-category this category)))
 
-(defrecord Round1Game [score-so-far rolled-dice roll read-dice-to-rerun-input]
+(defrecord Round1Game [score-so-far rolled-dice roll read-user-input]
   game-sequence/GameSequence
   (play [this]
     (let [categories [:ones :twos :threes]]
@@ -53,9 +53,9 @@
       (notifications/notify-scores-summary categories (partial score/for-category score-so-far))
       (notifications/notify-final-score (score/total-for-categories score-so-far categories)))))
 
-(defn make [roll read-dice-to-rerun-input]
+(defn make [roll read-user-input]
   (->Round1Game
     (score/start)
     (rolls-history/start)
     roll
-    read-dice-to-rerun-input))
+    read-user-input))

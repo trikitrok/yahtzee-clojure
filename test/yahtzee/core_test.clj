@@ -18,7 +18,7 @@
                        6 1 2
                        5 1 3 2 3
                        6 2 4]
-      :rerunning-dice ["D1 D2 D4"
+      :and-user-input ["D1 D2 D4"
                        "D2 D4"
                        "D2 D5"
                        "D3 D4 D5"
@@ -56,16 +56,25 @@
       :for-round :round2
       :using-as-rands [2 4 1 6 1
                        1 5 2
-                       1 5]
-      :rerunning-dice ["D1 D2 D4"
+                       1 5
+                       1 5 2
+                       2 4 5]
+      :and-user-input ["D1 D2 D4"
                        "D2 D4"
-                       "1"]) => ["Dice: D1:2 D2:4 D3:1 D4:6 D5:1"
-                                     "[1] Dice to re-run:"
-                                     "Dice: D1:1 D2:5 D3:1 D4:2 D5:1"
-                                     "[2] Dice to re-run:"
-                                     "Dice: D1:1 D2:1 D3:1 D4:5 D5:1"
-                                     "Available categories:"
-                                     "[1] Ones"
-                                     "[2] Twos"
-                                     "[3] Threes"
-                                     "Category to add points to: 1"]))
+                       "1"
+                       "D1 D2 D4"
+                       "D1 D2 D5"]) => ["Dice: D1:2 D2:4 D3:1 D4:6 D5:1"
+                                        "[1] Dice to re-run:"
+                                        "Dice: D1:1 D2:5 D3:1 D4:2 D5:1"
+                                        "[2] Dice to re-run:"
+                                        "Dice: D1:1 D2:1 D3:1 D4:5 D5:1"
+                                        "Available categories:"
+                                        "[1] Ones"
+                                        "[2] Twos"
+                                        "[3] Threes"
+                                        "Category to add points to: 1"
+                                        "Dice: D1:2 D2:4 D3:1 D4:6 D5:1"
+                                        "[1] Dice to re-run:"
+                                        "Dice: D1:1 D2:5 D3:1 D4:2 D5:1"
+                                        "[2] Dice to re-run:"
+                                        "Dice: D1:2 D2:4 D3:1 D4:2 D5:5"]))

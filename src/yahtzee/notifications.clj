@@ -33,8 +33,8 @@
   (println (str "Category " (titles-by-category category)
                 " score: " (score-by category))))
 
-(defn notify-adding-points-to []
-  (println "Category to add points to: 1"))
+(defn notify-adding-points-to [category]
+  (println (str "Category to add points to: " category)))
 
 (defn notify-available-categories [categories]
   (->> categories

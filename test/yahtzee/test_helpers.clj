@@ -12,11 +12,11 @@
   {:round1 make-round1-yahtzee
    :round2 make-round2-yahtzee})
 
-(defn- make-yahtze [{:keys [for-round using-as-rands rerunning-dice]}]
+(defn- make-yahtze [{:keys [for-round using-as-rands and-user-input]}]
   (let [make-yahtzee (game-factories-by-round for-round)
         stubbed-roll (make-list-generator using-as-rands)
-        stubbed-read-dice-to-rerun-input (make-list-generator rerunning-dice)]
-    yahtzee (make-yahtzee stubbed-roll stubbed-read-dice-to-rerun-input)))
+        stubbed-read-user-input (make-list-generator and-user-input)]
+    yahtzee (make-yahtzee stubbed-roll stubbed-read-user-input)))
 
 
 (defn output-lines-of-running-yahtzee [& {:as params}]
