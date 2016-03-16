@@ -1,9 +1,9 @@
 (ns yahtzee.rolls-history)
 
-(defrecord RolledDiceRecording [initial last])
+(defrecord RollsHistory [initial last])
 
 (defn start []
-  (->RolledDiceRecording
+  (->RollsHistory
     (atom {})
     (atom {:d1 nil :d2 nil :d3 nil :d4 nil :d5 nil})))
 
