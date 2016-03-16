@@ -45,7 +45,7 @@
   (doseq [category categories]
     (play-category this category)))
 
-(defrecord Round1Game [score-so-far rolled-dice roll read-user-input]
+(defrecord Game1 [score-so-far rolled-dice roll read-user-input]
   game-sequence/GameSequence
   (play [this]
     (let [categories [:ones :twos :threes]]
@@ -54,7 +54,7 @@
       (notifications/notify-final-score (score/total-for-categories score-so-far categories)))))
 
 (defn make [roll read-user-input]
-  (->Round1Game
+  (->Game1
     (score/start)
     (rolls-history/start)
     roll

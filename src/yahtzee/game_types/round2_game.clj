@@ -56,41 +56,31 @@
     category
     (dice-scoring/score category (rolls-history/the-last rolled-dice))))
 
-(defrecord Round1Game [score-so-far rolled-dice roll read-user-input]
+(defn play-round [{:keys [score-so-far rolled-dice roll read-user-input] :as game} categories]
+  (dice-rolling/first-roll-dice rolled-dice roll dice)
+  (notifications/notify-dice (rolls-history/the-last rolled-dice) dice)
+  (do-reruns game)
+  (notifications/notify-available-categories (available-categories categories))
+  (select-category (category-to-add-input-to (read-user-input)))
+  (annotate-to-category score-so-far (last-selected-category) rolled-dice)
+  (notifications/notify-adding-points-to (last-selected-category)))
+
+(defn play-rounds [game categories num]
+  (loop [n 0]
+    (when (< n num)
+      (play-round game categories)
+      (recur (inc n)))))
+
+(defrecord Game2 [score-so-far rolled-dice roll read-user-input]
   game-sequence/GameSequence
   (play [this]
     (let [categories [:ones :twos :threes]]
-      (dice-rolling/first-roll-dice rolled-dice roll dice)
-      (notifications/notify-dice (rolls-history/the-last rolled-dice) dice)
-      (do-reruns this)
-      (notifications/notify-available-categories (available-categories categories))
-      (select-category (category-to-add-input-to (read-user-input)))
-      (annotate-to-category score-so-far (last-selected-category) rolled-dice)
-      (notifications/notify-adding-points-to (last-selected-category))
-
-      (dice-rolling/first-roll-dice rolled-dice roll dice)
-      (notifications/notify-dice (rolls-history/the-last rolled-dice) dice)
-      (do-reruns this)
-      (notifications/notify-available-categories (available-categories categories))
-      (select-category (category-to-add-input-to (read-user-input)))
-      (annotate-to-category score-so-far (last-selected-category) rolled-dice)
-      (notifications/notify-adding-points-to (last-selected-category))
-
-      (dice-rolling/first-roll-dice rolled-dice roll dice)
-      (notifications/notify-dice (rolls-history/the-last rolled-dice) dice)
-      (do-reruns this)
-      (notifications/notify-available-categories (available-categories categories))
-      (select-category (category-to-add-input-to (read-user-input)))
-      (annotate-to-category score-so-far (last-selected-category) rolled-dice)
-      (notifications/notify-adding-points-to (last-selected-category))
+      (play-rounds this categories 3)
       (notifications/notify-scores-summary categories (partial score/for-category score-so-far))
-      (notifications/notify-final-score (score/total-for-categories score-so-far categories))
-      )
-
-    ))
+      (notifications/notify-final-score (score/total-for-categories score-so-far categories)))))
 
 (defn make [roll read-user-input]
-  (->Round1Game
+  (->Game2
     (score/start)
     (rolls-history/start)
     roll
