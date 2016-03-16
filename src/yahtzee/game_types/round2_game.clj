@@ -6,9 +6,8 @@
     [yahtzee.dice-rolling :as dice-rolling]
     [yahtzee.game-sequence :as game-sequence]
     [yahtzee.rolls-history :as rolls-history]
-    [yahtzee.dice-scoring :as dice-scoring]))
-
-(def ^:private dice [:d1 :d2 :d3 :d4 :d5])
+    [yahtzee.dice-scoring :as dice-scoring]
+    [yahtzee.dice :as dice]))
 
 (def selected-categories
   (atom []))
@@ -40,8 +39,8 @@
     (dice-scoring/score category (rolls-history/the-last rolled-dice))))
 
 (defn play-round [{:keys [score-so-far rolled-dice roll read-user-input] :as game} categories]
-  (dice-rolling/first-roll-dice rolled-dice roll dice)
-  (notifications/notify-dice (rolls-history/the-last rolled-dice) dice)
+  (dice-rolling/first-roll-dice rolled-dice roll dice/dice)
+  (notifications/notify-dice (rolls-history/the-last rolled-dice) dice/dice)
   (reruns/do game)
   (notifications/notify-available-categories (available-categories categories))
   (select-category (category-to-add-input-to (read-user-input)))
