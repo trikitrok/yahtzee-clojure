@@ -7,6 +7,7 @@
     [yahtzee.dice-scoring :as dice-scoring]
     [yahtzee.game-sequence :as game-sequence]
     [yahtzee.rolls-history :as rolls-history]
+    [yahtzee.categories :as categories]
     [yahtzee.dice :as dice]))
 
 (defn annotate-to-category [score-so-far category rolled-dice]
@@ -30,10 +31,9 @@
 (defrecord Game1 [score-so-far rolled-dice roll read-user-input]
   game-sequence/GameSequence
   (play [this]
-    (let [categories [:ones :twos :threes]]
-      (play-categories this categories)
-      (notifications/notify-scores-summary categories (partial score/for-category score-so-far))
-      (notifications/notify-final-score (score/total-for-categories score-so-far categories)))))
+    (play-categories this categories/categories)
+    (notifications/notify-scores-summary categories/categories (partial score/for-category score-so-far))
+    (notifications/notify-final-score (score/total-for-categories score-so-far categories/categories))))
 
 (defn make [roll read-user-input]
   (->Game1

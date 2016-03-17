@@ -1,5 +1,7 @@
 (ns yahtzee.categories)
 
+(def categories [:ones :twos :threes])
+
 (def ^:private categories-by-input
   {"1" :ones
    "2" :twos

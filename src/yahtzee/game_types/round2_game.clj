@@ -34,10 +34,9 @@
 (defrecord Game2 [score-so-far rolled-dice selected-categories roll read-user-input]
   game-sequence/GameSequence
   (play [this]
-    (let [categories [:ones :twos :threes]]
-      (play-rounds this categories 3)
-      (notifications/notify-scores-summary categories (partial score/for-category score-so-far))
-      (notifications/notify-final-score (score/total-for-categories score-so-far categories)))))
+    (play-rounds this categories/categories 3)
+    (notifications/notify-scores-summary categories/categories (partial score/for-category score-so-far))
+    (notifications/notify-final-score (score/total-for-categories score-so-far categories/categories))))
 
 (defn make [roll read-user-input]
   (->Game2
