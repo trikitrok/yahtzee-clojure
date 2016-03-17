@@ -4,9 +4,10 @@
 
 (defn make-list-generator [ls]
   (let [atom-ls (atom ls)]
-    #(let [next-val (first @atom-ls)]
-      (swap! atom-ls rest)
-      next-val)))
+    (fn []
+      (let [next-val (first @atom-ls)]
+        (swap! atom-ls rest)
+        next-val))))
 
 (defn- make-yahtze [{:keys [for-round using-as-rands and-user-input]}]
   (let [stubbed-roll (make-list-generator using-as-rands)
