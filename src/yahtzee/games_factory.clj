@@ -1,4 +1,4 @@
-(ns yahtzee.game
+(ns yahtzee.games-factory
   (:require
     [yahtzee.game-sequence :refer [play]]
     [yahtzee.game-types.round1-game :as round1-game]
