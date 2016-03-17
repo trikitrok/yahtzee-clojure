@@ -6,15 +6,9 @@
     [yahtzee.dice-rolling :as dice-rolling]
     [yahtzee.game-sequence :as game-sequence]
     [yahtzee.rolls-history :as rolls-history]
-    [yahtzee.dice-scoring :as dice-scoring]
     [yahtzee.categories :as categories]
-    [yahtzee.dice :as dice]))
-
-(defn annotate-to-category [score-so-far category rolled-dice]
-  (score/annotate-to-category
-    score-so-far
-    category
-    (dice-scoring/score category (rolls-history/the-last rolled-dice))))
+    [yahtzee.dice :as dice]
+    [yahtzee.game :as game]))
 
 (defn play-round [{:keys [score-so-far rolled-dice selected-categories roll read-user-input] :as game} categories]
   (dice-rolling/first-roll-dice rolled-dice roll dice/dice)
@@ -22,7 +16,7 @@
   (reruns/do game)
   (notifications/notify-available-categories (categories/available selected-categories categories))
   (categories/select-category! selected-categories (categories/category-to-add-input-to (read-user-input)))
-  (annotate-to-category score-so-far (categories/last-selected selected-categories) rolled-dice)
+  (game/annotate-to-category score-so-far (categories/last-selected selected-categories) rolled-dice)
   (notifications/notify-adding-points-to (categories/last-selected selected-categories)))
 
 (defn play-rounds [game categories num]

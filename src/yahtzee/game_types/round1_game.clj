@@ -4,24 +4,18 @@
     [yahtzee.score :as score]
     [yahtzee.reruns :as reruns]
     [yahtzee.dice-rolling :as dice-rolling]
-    [yahtzee.dice-scoring :as dice-scoring]
     [yahtzee.game-sequence :as game-sequence]
     [yahtzee.rolls-history :as rolls-history]
     [yahtzee.categories :as categories]
-    [yahtzee.dice :as dice]))
-
-(defn annotate-to-category [score-so-far category rolled-dice]
-  (score/annotate-to-category
-    score-so-far
-    category
-    (dice-scoring/score category (rolls-history/the-last rolled-dice))))
+    [yahtzee.dice :as dice]
+    [yahtzee.game :as game]))
 
 (defn- play-category [{:keys [score-so-far rolled-dice roll] :as game} category]
   (notifications/notify-category category)
   (dice-rolling/first-roll-dice rolled-dice roll dice/dice)
   (notifications/notify-dice (rolls-history/the-last rolled-dice) dice/dice)
   (reruns/do game)
-  (annotate-to-category score-so-far category rolled-dice)
+  (game/annotate-to-category score-so-far category rolled-dice)
   (notifications/notify-category-score category (partial score/for-category score-so-far)))
 
 (defn- play-categories [this categories]
