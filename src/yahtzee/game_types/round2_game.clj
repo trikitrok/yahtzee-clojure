@@ -7,30 +7,8 @@
     [yahtzee.game-sequence :as game-sequence]
     [yahtzee.rolls-history :as rolls-history]
     [yahtzee.dice-scoring :as dice-scoring]
+    [yahtzee.categories :as categories]
     [yahtzee.dice :as dice]))
-
-(def selected-categories
-  (atom []))
-
-(def categories-by-input
-  {"1" :ones
-   "2" :twos
-   "3" :threes})
-
-(defn- category-to-add-input-to [input-category-num]
-  (categories-by-input input-category-num))
-
-(defn- select-category [c]
-  (swap!
-    selected-categories
-    conj
-    c))
-
-(defn- last-selected-category []
-  (last @selected-categories))
-
-(defn- available-categories [categories]
-  (filter #(not (contains? (set @selected-categories) %)) categories))
 
 (defn annotate-to-category [score-so-far category rolled-dice]
   (score/annotate-to-category
@@ -38,14 +16,14 @@
     category
     (dice-scoring/score category (rolls-history/the-last rolled-dice))))
 
-(defn play-round [{:keys [score-so-far rolled-dice roll read-user-input] :as game} categories]
+(defn play-round [{:keys [score-so-far rolled-dice selected-categories roll read-user-input] :as game} categories]
   (dice-rolling/first-roll-dice rolled-dice roll dice/dice)
   (notifications/notify-dice (rolls-history/the-last rolled-dice) dice/dice)
   (reruns/do game)
-  (notifications/notify-available-categories (available-categories categories))
-  (select-category (category-to-add-input-to (read-user-input)))
-  (annotate-to-category score-so-far (last-selected-category) rolled-dice)
-  (notifications/notify-adding-points-to (last-selected-category)))
+  (notifications/notify-available-categories (categories/available selected-categories categories))
+  (categories/select-category! selected-categories (categories/category-to-add-input-to (read-user-input)))
+  (annotate-to-category score-so-far (categories/last-selected selected-categories) rolled-dice)
+  (notifications/notify-adding-points-to (categories/last-selected selected-categories)))
 
 (defn play-rounds [game categories num]
   (loop [n 0]
@@ -53,7 +31,7 @@
       (play-round game categories)
       (recur (inc n)))))
 
-(defrecord Game2 [score-so-far rolled-dice roll read-user-input]
+(defrecord Game2 [score-so-far rolled-dice selected-categories roll read-user-input]
   game-sequence/GameSequence
   (play [this]
     (let [categories [:ones :twos :threes]]
@@ -65,5 +43,6 @@
   (->Game2
     (score/start)
     (rolls-history/start)
+    (categories/start)
     roll
     read-user-input))
